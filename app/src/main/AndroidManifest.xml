@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -11,11 +12,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:name=".modelviewer.ModelViewerApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -27,22 +30,60 @@
         </provider>
 
         <activity
-            android:name=".LandingActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".MainActivity"
+            android:parentActivityName=".LandingActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:parentActivityName=".LandingActivity"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
-            android:name=".ModelActivity"
+            android:name=".ModelViewerActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.stl"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.stl"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.stl"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.stl"
+                    android:scheme="file" />
+            </intent-filter>
+
+            <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="application/stl"/>
+            <data android:mimeType="application/x-stl"/>
+            <data android:mimeType="application/octet-stream" android:scheme="content"/>
+            </intent-filter>
         </activity>
+
+        <uses-library android:name="com.sec.android.app.multiwindow" android:required="false" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+
     </application>
+
 </manifest>

@@ -49,6 +49,7 @@ import com.google.firebase.ml.vision.text.RecognizedLanguage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -290,6 +291,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View textView) {
                     Log.e("click", "click " + tag);
+
+                    Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
+                    MainActivity.this.startActivity(intent);
                 }
                 @Override
                 public void updateDrawState(TextPaint ds) {
