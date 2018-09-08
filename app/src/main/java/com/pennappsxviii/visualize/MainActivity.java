@@ -217,49 +217,49 @@ public class MainActivity extends AppCompatActivity {
         FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
 
         textRecognizer.processImage(image)
-                .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
-                    @Override
-                    public void onSuccess(FirebaseVisionText result) {
-                        // Task completed successfully
-                        String resultText = result.getText();
-                        for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
-                            String blockText = block.getText();
-                            Float blockConfidence = block.getConfidence();
-                            List<RecognizedLanguage> blockLanguages = block.getRecognizedLanguages();
-                            Point[] blockCornerPoints = block.getCornerPoints();
-                            Rect blockFrame = block.getBoundingBox();
-                            for (FirebaseVisionText.Line line : block.getLines()) {
-                                String lineText = line.getText();
-                                Float lineConfidence = line.getConfidence();
-                                List<RecognizedLanguage> lineLanguages = line.getRecognizedLanguages();
-                                Point[] lineCornerPoints = line.getCornerPoints();
-                                Rect lineFrame = line.getBoundingBox();
-                                for (FirebaseVisionText.Element element : line.getElements()) {
-                                    String elementText = element.getText();
-                                    Float elementConfidence = element.getConfidence();
-                                    List<RecognizedLanguage> elementLanguages = element.getRecognizedLanguages();
-                                    Point[] elementCornerPoints = element.getCornerPoints();
-                                    Rect elementFrame = element.getBoundingBox();
-                                }
+            .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                @Override
+                public void onSuccess(FirebaseVisionText result) {
+                    // Task completed successfully
+                    String resultText = result.getText();
+                    for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+                        String blockText = block.getText();
+                        Float blockConfidence = block.getConfidence();
+                        List<RecognizedLanguage> blockLanguages = block.getRecognizedLanguages();
+                        Point[] blockCornerPoints = block.getCornerPoints();
+                        Rect blockFrame = block.getBoundingBox();
+                        for (FirebaseVisionText.Line line : block.getLines()) {
+                            String lineText = line.getText();
+                            Float lineConfidence = line.getConfidence();
+                            List<RecognizedLanguage> lineLanguages = line.getRecognizedLanguages();
+                            Point[] lineCornerPoints = line.getCornerPoints();
+                            Rect lineFrame = line.getBoundingBox();
+                            for (FirebaseVisionText.Element element : line.getElements()) {
+                                String elementText = element.getText();
+                                Float elementConfidence = element.getConfidence();
+                                List<RecognizedLanguage> elementLanguages = element.getRecognizedLanguages();
+                                Point[] elementCornerPoints = element.getCornerPoints();
+                                Rect elementFrame = element.getBoundingBox();
                             }
-                            documentText.setText(resultText);
                         }
+                        documentText.setText(resultText);
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Task failed with an exception
-                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                        alertDialog.setTitle("Alert");
-                        alertDialog.setMessage("Invalid Image");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        alertDialog.show();
-                    }
-                });
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Task failed with an exception
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("Invalid Image");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            });
     }
 }
