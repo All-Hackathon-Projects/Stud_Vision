@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
+    // Text Display
     private SpannableString convertTextToClickableSpan (String input) {
         SpannableString spanString = new SpannableString(input);
         Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
@@ -294,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View textView) {
-                    Log.e("click", "click " + tag);
                     String modelName = tag + ".stl";
 
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
@@ -304,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void updateDrawState(TextPaint ds) {
                     super.updateDrawState(ds);
-
                 }
             };
             spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
