@@ -279,9 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private SpannableString convertTextToClickableSpan (String input) {
-        String text="I love to do programming in @Android @IOS @JAVA";
-
-        SpannableString spanString = new SpannableString(text);
+        SpannableString spanString = new SpannableString(input);
         Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
 
         while (matcher.find())
@@ -292,9 +290,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View textView) {
                     Log.e("click", "click " + tag);
-                    String searchText=tag.replace("@",""); //replace '@' with blank character to search on google.
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.co.in/search?q=" + searchText));
-                    startActivity(browserIntent);
                 }
                 @Override
                 public void updateDrawState(TextPaint ds) {
