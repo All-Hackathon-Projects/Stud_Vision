@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CCC"
@@ -15,13 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        sothree:umanoPanelHeight="68dp"
-        sothree:umanoShadowHeight="4dp">
+        sothree:umanoPanelHeight="50dp"
+        sothree:umanoShadowHeight="5dp">
 
         <!-- Main Layout -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/container_view"
             android:orientation="vertical">
             <ProgressBar
                 android:id="@+id/model_progress_bar"
@@ -47,7 +47,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -55,17 +55,16 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:text="asdf"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/btn_hide"
-                    android:layout_width="wrap_content"
+                    android:textSize="28sp" />
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|right"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:gravity="center_vertical"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="fdsa"
-                    android:textSize="14sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

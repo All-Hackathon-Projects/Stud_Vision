@@ -23,7 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pennappsxviii.visualize.modelviewer.Model;
@@ -34,6 +36,7 @@ import com.pennappsxviii.visualize.modelviewer.gvr.ModelGvrActivity;
 import com.pennappsxviii.visualize.modelviewer.obj.ObjModel;
 import com.pennappsxviii.visualize.modelviewer.ply.PlyModel;
 import com.pennappsxviii.visualize.modelviewer.stl.StlModel;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -71,6 +74,10 @@ public class ModelViewerActivity extends AppCompatActivity {
     @Nullable private ModelSurfaceView modelView;
     private ViewGroup containerView;
     private ProgressBar progressBar;
+    private LinearLayout dragView;
+    private SlidingUpPanelLayout slidingLayout;
+    private TextView title;
+    private TextView information;
 
     private String modelName;
 
@@ -84,6 +91,22 @@ public class ModelViewerActivity extends AppCompatActivity {
         modelName = intent.getStringExtra("modelName");
         containerView = findViewById(R.id.container_view);
         progressBar = findViewById(R.id.model_progress_bar);
+
+        dragView = (LinearLayout) findViewById(R.id.dragView);
+        slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        slidingLayout.setOverlayed(true);
+        slidingLayout.setClipPanel(false);
+        slidingLayout.setDragView(dragView);
+
+        title = (TextView) findViewById(R.id.title);
+        title.setText("Statue Of Liberty");
+        information = (TextView) findViewById(R.id.info);
+        information.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown " +
+                "printer took a galley of type and scrambled it to make a type specimen book. It has survived not " +
+                "only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. " +
+                "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, " +
+                "and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
 
         if (progressBar != null){
             progressBar.setVisibility(View.GONE);
