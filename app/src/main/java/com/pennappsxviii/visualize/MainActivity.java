@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         documentText = (TextView) findViewById(R.id.documentText);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -165,9 +168,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            textRecognition();
+        }
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        openCamera();
     }
 
     public static void startInstalledAppDetailsActivity(final Activity context) {
@@ -218,11 +234,13 @@ public class MainActivity extends AppCompatActivity {
                         photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                //textRecognition();
             }
         }
     }
 
-    public void textRecognition(View view) {
+
+    public void textRecognition() {
         Bitmap bitmapImage = BitmapFactory.decodeFile(mCurrentPhotoPath);
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmapImage);
         FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
@@ -292,7 +310,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View textView) {
                     Log.e("click", "click " + tag);
 
+                    String modelName = tag + ".stl";
+
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
+                    intent.putExtra("modelName", "lucy.stl");
                     MainActivity.this.startActivity(intent);
                 }
                 @Override

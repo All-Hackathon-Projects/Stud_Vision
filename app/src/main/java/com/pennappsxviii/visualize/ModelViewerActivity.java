@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,11 +72,18 @@ public class ModelViewerActivity extends AppCompatActivity {
     private ViewGroup containerView;
     private ProgressBar progressBar;
 
+    private String modelName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model_viewer);
         app = ModelViewerApplication.getInstance();
+
+
+        Intent intent = getIntent();
+        modelName = intent.getStringExtra("modelName");
+
 
         containerView = findViewById(R.id.container_view);
         progressBar = findViewById(R.id.model_progress_bar);
@@ -97,7 +105,9 @@ public class ModelViewerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         createNewModelView(app.getCurrentModel());
+        loadModel();
         if (app.getCurrentModel() != null) {
+            Log.d("currentModel", "null");
             setTitle(app.getCurrentModel().getTitle());
         }
     }
@@ -298,7 +308,7 @@ public class ModelViewerActivity extends AppCompatActivity {
     private void loadSampleModel() {
         try {
             InputStream stream = getApplicationContext().getAssets()
-                    .open(SAMPLE_MODELS[sampleModelIndex++ % SAMPLE_MODELS.length]);
+                    .open(SAMPLE_MODELS[0]);
             setCurrentModel(new StlModel(stream));
             stream.close();
         } catch (IOException e) {
@@ -306,6 +316,16 @@ public class ModelViewerActivity extends AppCompatActivity {
         }
     }
 
+    private void loadModel() {
+        try {
+            InputStream stream = getApplicationContext().getAssets()
+                    .open(modelName);
+            setCurrentModel(new StlModel(stream));
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void showAboutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.app_name)

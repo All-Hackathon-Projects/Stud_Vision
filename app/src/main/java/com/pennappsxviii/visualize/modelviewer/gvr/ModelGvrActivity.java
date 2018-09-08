@@ -70,13 +70,10 @@ public class ModelGvrActivity extends GvrActivity implements GvrView.StereoRende
     private float[] headRotation = new float[4];
     private float[] headEulerAngles = new float[3];
 
-    private Vibrator vibrator;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeGvrView();
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void initializeGvrView() {
