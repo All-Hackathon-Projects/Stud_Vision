@@ -80,22 +80,14 @@ public class ModelViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_model_viewer);
         app = ModelViewerApplication.getInstance();
 
-
         Intent intent = getIntent();
         modelName = intent.getStringExtra("modelName");
-
-
         containerView = findViewById(R.id.container_view);
         progressBar = findViewById(R.id.model_progress_bar);
 
-        if (progressBar != null) progressBar.setVisibility(View.GONE);
-
-        findViewById(R.id.vr_fab).setOnClickListener(new View.OnClickListener() {
-            public void onClick (View v) {
-                startVrActivity();
-            }
-        });
-
+        if (progressBar != null){
+            progressBar.setVisibility(View.GONE);
+        }
         if (getIntent().getData() != null && savedInstanceState == null) {
             beginLoadModel(getIntent().getData());
         }
@@ -152,8 +144,7 @@ public class ModelViewerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case READ_PERMISSION_REQUEST:
                 if (grantResults.length > 0
@@ -178,11 +169,9 @@ public class ModelViewerActivity extends AppCompatActivity {
     }
 
     private void checkReadPermissionThenOpen() {
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    READ_PERMISSION_REQUEST);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST);
         } else {
             beginOpenModel();
         }
@@ -327,10 +316,6 @@ public class ModelViewerActivity extends AppCompatActivity {
         }
     }
     private void showAboutDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.app_name)
-                .setMessage(R.string.about_text)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+        new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(R.string.about_text).setPositiveButton(android.R.string.ok, null).show();
     }
 }

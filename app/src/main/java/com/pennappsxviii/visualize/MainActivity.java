@@ -351,6 +351,9 @@ public class MainActivity extends AppCompatActivity {
                     //intent.putExtra("EXTRA_SESSION_ID", tempImageButton.getTag().toString());
                     //startActivity(intent);
                     Log.d("STATE", tempButton.getTag() + "");
+                    Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
+                    intent.putExtra("modelName", "lucy.stl");
+                    MainActivity.this.startActivity(intent);
                 }
             });
             tempLayout.addView(tempButton);
