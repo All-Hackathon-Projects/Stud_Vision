@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -33,8 +34,14 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,6 +56,8 @@ import com.google.firebase.ml.vision.text.RecognizedLanguage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         documentText = (TextView) findViewById(R.id.documentText);
+        flashcardDisplay();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (getFromPref(this, ALLOW_KEY)) {
@@ -232,8 +242,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmapImage);
         FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
 
-        textRecognizer.processImage(image)
-            .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+        textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText result) {
                     // Task completed successfully
@@ -309,5 +318,68 @@ public class MainActivity extends AppCompatActivity {
             spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return spanString;
+    }
+
+    // Text Display
+    private void flashcardDisplay () {
+        ArrayList<String> arr = new ArrayList(Arrays.asList("Joel","Amos","Obadiah","Jonah","Micah","Nahum",
+                "Habakkuk","Zephaniah","Haggai","Zechariah","Malachi", "Matthew", "Mark", "Luke", "John", "Acts",
+                "Romans", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "Titus", "Philemon",
+                "Hebrews", "James", "1 Peter", "2 Peter", "Jude", "Revelation"));
+        ArrayList<LinearLayout> layoutPackage = new ArrayList<LinearLayout>();
+        // Layout Package
+        for(int i = 0; i < arr.size(); i++) {
+            String str = arr.get(i);
+
+            final LinearLayout tempLayout = new LinearLayout(this);
+            tempLayout.setOrientation(LinearLayout.VERTICAL);
+            tempLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            tempLayout.setGravity(Gravity.CENTER);
+
+            final Button tempButton = new Button(this);
+            tempButton.setLayoutParams(new LinearLayout.LayoutParams(Resources.getSystem().getDisplayMetrics().widthPixels/2, Resources.getSystem().getDisplayMetrics().widthPixels/2));
+            tempButton.setForegroundGravity(Gravity.CENTER);
+
+            tempButton.setBackgroundColor(Color.rgb((int)(Math.random()*100), (int)(Math.random()*100), (int)(Math.random()*100)));
+            tempButton.setText(str);
+            tempButton.setTextSize(24);
+            tempButton.setTextColor(Color.WHITE);
+            tempButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Intent intent = new Intent(BibleListActivity.this, BibleTextActivity.class);
+                    //intent.putExtra("EXTRA_SESSION_ID", tempImageButton.getTag().toString());
+                    //startActivity(intent);
+                    Log.d("STATE", tempButton.getTag() + "");
+                }
+            });
+            tempLayout.addView(tempButton);
+            layoutPackage.add(tempLayout);
+        }
+        // Scroll
+        ScrollView view = new ScrollView(this);
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        // Establish Three Vertical Regions Of Equal Weight
+        LinearLayout main = new LinearLayout(this);
+        main.setOrientation(LinearLayout.HORIZONTAL);
+        main.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        main.setWeightSum(3f);
+        LinearLayout col1 = new LinearLayout(this);
+        col1.setOrientation(LinearLayout.VERTICAL);
+        col1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        col1.setGravity(Gravity.CENTER);
+        // Loop To Add Internal Layouts To Column
+        for(int i = 0; i < layoutPackage.size(); i+=2) col1.addView(layoutPackage.get(i));
+        main.addView(col1);
+        LinearLayout col2 = new LinearLayout(this);
+        col2.setOrientation(LinearLayout.VERTICAL);
+        col2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        col2.setGravity(Gravity.CENTER);
+        // Loop To Add Internal Layouts To Column
+        for(int i = 1; i < layoutPackage.size(); i+=2) col2.addView(layoutPackage.get(i));
+        main.addView(col2);
+        view.addView(main);
+        setContentView(view);
     }
 }
