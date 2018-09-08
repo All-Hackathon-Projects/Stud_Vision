@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -25,6 +26,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -44,6 +51,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CAMERA_PREF = "camera_pref";
 
     private TextView documentText;
+    private SpannableString parsedText;
     private String mCurrentPhotoPath;
 
     @Override
@@ -243,6 +253,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         documentText.setText(resultText);
+                        parsedText = convertTextToClickableSpan(resultText);
+
+                        documentText.setText(parsedText);
+                        documentText.setMovementMethod(LinkMovementMethod.getInstance());
+
                     }
                 }
             })
@@ -261,5 +276,35 @@ public class MainActivity extends AppCompatActivity {
                     alertDialog.show();
                 }
             });
+    }
+
+    private SpannableString convertTextToClickableSpan (String input) {
+        String text="I love to do programming in @Android @IOS @JAVA";
+
+        SpannableString spanString = new SpannableString(text);
+        Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
+
+        while (matcher.find())
+        {
+            spanString.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher.start(), matcher.end(), 0); //to highlight word havgin '@'
+            final String tag = matcher.group(0);
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    Log.e("click", "click " + tag);
+                    String searchText=tag.replace("@",""); //replace '@' with blank character to search on google.
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.co.in/search?q=" + searchText));
+                    startActivity(browserIntent);
+                }
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+
+                }
+            };
+            spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return spanString;
     }
 }
