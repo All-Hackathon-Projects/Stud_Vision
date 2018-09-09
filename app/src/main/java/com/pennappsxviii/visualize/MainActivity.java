@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("QWERTY", results + "");
         List<String> keys = new ArrayList<String>(results.keySet());
         Log.d("QWERTY", keys + "");
-        for(int i = 0; i < (int)(Math.random()*5 + 7); i++){
+        for(int i = 0; i < (int)(Math.random()*7 + 5); i++){
             if(keys.size() != 0) keywords.add(keys.remove(0));
         }
 
@@ -321,8 +321,8 @@ public class MainActivity extends AppCompatActivity {
                 "ethanol", "isopropylchloride", "nanotube", "nitric acid", "phenols", "theobromine", "water"};
         int arrayIndex = keywords.size() - 1;
         for(String str : templateArray){
-            if(imageText.contains(str)){
-                keywords.set(arrayIndex, str);
+            if(imageText.contains(str) && arrayIndex >= 0){
+                keywords.set(arrayIndex--, str);
             }
         }
         Collections.reverse(keywords);
