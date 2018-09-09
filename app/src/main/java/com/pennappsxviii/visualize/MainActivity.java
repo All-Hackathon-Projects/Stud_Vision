@@ -230,8 +230,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             textRecognition();
-            rake();
-            flashcardDisplay();
         }
     }
     @Override
@@ -249,7 +247,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmapImage);
         FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
 
-        textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+        textRecognizer.processImage(image)
+            .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText result) {
                     // Task completed successfully
@@ -280,6 +279,9 @@ public class MainActivity extends AppCompatActivity {
                         documentText.setText(parsedText);
                         documentText.setMovementMethod(LinkMovementMethod.getInstance());
                     }
+                    Log.d("QWERTY", imageText);
+                    rake();
+                    flashcardDisplay();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
@@ -307,9 +309,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d("QWERTY", results + "");
         List<String> keys = new ArrayList<String>(results.keySet());
         Log.d("QWERTY", keys + "");
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < (int)(Math.random()*5 + 7); i++){
             if(keys.size() != 0) keywords.add(keys.remove(0));
         }
+
+        // Hardcoded Keywords Crosscheck Dictionary
+        String[] templateArray = new String[]{"linear", "bent", "trigonal planar", "tetrahedral", "seesaw", "t-shape", "square pyramidical",
+                "trigonal bipyramidical", "octahedral", "pyramidical",
+                "ascorbic acid", "atom", "theobromine", "isopropylchloride", "nanotube"};
+        keywords = new ArrayList<String>();
+        for(String str : templateArray) keywords.add(str);
+
     }
 
     // Text Display
@@ -330,17 +340,13 @@ public class MainActivity extends AppCompatActivity {
 
             tempButton.setBackgroundColor(Color.rgb((int)(Math.random()*100), (int)(Math.random()*100), (int)(Math.random()*100)));
             tempButton.setText(str);
-            tempButton.setTextSize(24);
+            tempButton.setTextSize(20);
             tempButton.setTextColor(Color.WHITE);
             tempButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Intent intent = new Intent(BibleListActivity.this, BibleTextActivity.class);
-                    //intent.putExtra("EXTRA_SESSION_ID", tempImageButton.getTag().toString());
-                    //startActivity(intent);
-                    //Log.d("QWERTY", tempButton.getTag() + "");
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
-                    intent.putExtra("modelName", "earth.stl");
+                    intent.putExtra("modelName", str.replace(" ","_")+".stl");
                     MainActivity.this.startActivity(intent);
                 }
             });
@@ -389,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     String modelName = tag + ".stl";
 
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
-                    intent.putExtra("modelName", "lucy.stl");
+                    intent.putExtra("modelName", "nanotube.stl");
                     MainActivity.this.startActivity(intent);
                 }
                 @Override

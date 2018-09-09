@@ -68,10 +68,6 @@ public class ModelViewerActivity extends AppCompatActivity {
     private static final int READ_PERMISSION_REQUEST = 100;
     private static final int OPEN_DOCUMENT_REQUEST = 101;
 
-    private static final String[] SAMPLE_MODELS
-            = new String[] { "bunny.stl", "dragon.stl", "lucy.stl" };
-    private static int sampleModelIndex;
-
     private ModelViewerApplication app;
     @Nullable private ModelSurfaceView modelView;
     private ViewGroup containerView;
@@ -136,29 +132,6 @@ public class ModelViewerActivity extends AppCompatActivity {
         super.onResume();
         if (modelView != null) {
             modelView.onResume();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_open_model:
-                checkReadPermissionThenOpen();
-                return true;
-            case R.id.menu_load_sample:
-                loadSampleModel();
-                return true;
-            case R.id.menu_about:
-                showAboutDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -307,17 +280,6 @@ public class ModelViewerActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.view_vr_not_loaded, Toast.LENGTH_SHORT).show();
         } else {
             startActivity(new Intent(this, ModelGvrActivity.class));
-        }
-    }
-
-    private void loadSampleModel() {
-        try {
-            InputStream stream = getApplicationContext().getAssets()
-                    .open(SAMPLE_MODELS[0]);
-            setCurrentModel(new StlModel(stream));
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
