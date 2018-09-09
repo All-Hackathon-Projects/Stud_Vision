@@ -59,6 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Iterator;
@@ -316,10 +317,14 @@ public class MainActivity extends AppCompatActivity {
         // Hardcoded Keywords Crosscheck Dictionary
         String[] templateArray = new String[]{"linear", "bent", "trigonal planar", "tetrahedral", "seesaw", "t-shape", "square pyramidical",
                 "trigonal bipyramidical", "octahedral", "pyramidical",
-                "ascorbic acid", "atom", "theobromine", "isopropylchloride", "nanotube"};
-        keywords = new ArrayList<String>();
-        for(String str : templateArray) keywords.add(str);
-
+                "atom", "theobromine", "isopropylchloride", "nanotube"};
+        int arrayIndex = keywords.size() - 1;
+        for(String str : templateArray){
+            if(imageText.contains(str)){
+                keywords.set(arrayIndex, str);
+            }
+        }
+        Collections.reverse(keywords);
     }
 
     // Text Display

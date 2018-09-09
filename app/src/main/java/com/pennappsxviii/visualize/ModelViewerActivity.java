@@ -102,7 +102,7 @@ public class ModelViewerActivity extends AppCompatActivity {
                 return true;
             }});
 
-        myWebView.loadUrl("https://en.m.wikipedia.org/wiki/Barack_Obama");
+        myWebView.loadUrl("https://en.m.wikipedia.org/wiki/" + modelName.replace(".stl", ""));
 
         if (getIntent().getData() != null && savedInstanceState == null) {
             beginLoadModel(getIntent().getData());
