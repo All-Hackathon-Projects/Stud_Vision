@@ -317,7 +317,8 @@ public class MainActivity extends AppCompatActivity {
         // Hardcoded Keywords Crosscheck Dictionary
         String[] templateArray = new String[]{"linear", "bent", "trigonal planar", "tetrahedral", "seesaw", "t-shape", "square pyramidical",
                 "trigonal bipyramidical", "octahedral", "pyramidical",
-                "atom", "theobromine", "isopropylchloride", "nanotube"};
+                "adamantine","ammonia", "atom", "bicarbonate", "carbon_dioxied", "carbon_monoxide", "carbonix_acid", "carboxylic_acid",
+                "ethanol", "isopropylchloride", "nanotube", "nitric acid", "phenols", "theobromine", "water"};
         int arrayIndex = keywords.size() - 1;
         for(String str : templateArray){
             if(imageText.contains(str)){
