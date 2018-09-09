@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                     //startActivity(intent);
                     Log.d("STATE", tempButton.getTag() + "");
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
-                    intent.putExtra("modelName", "lucy.stl");
+                    intent.putExtra("modelName", "earth.stl");
                     MainActivity.this.startActivity(intent);
                 }
             });

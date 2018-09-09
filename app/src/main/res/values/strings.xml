@@ -9,4 +9,6 @@
     <string name="open_model_error">Failed to load model.</string>
     <string name="view_vr">View in VR mode</string>
     <string name="view_vr_not_loaded">Please load a model first.</string>
+    <string name="drag_up">Drag up to learn more</string>
+    <string name="swipe_down">Swipe down to close</string>
 </resources>

@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -73,11 +75,9 @@ public class ModelViewerActivity extends AppCompatActivity {
     private ModelViewerApplication app;
     @Nullable private ModelSurfaceView modelView;
     private ViewGroup containerView;
-    private ProgressBar progressBar;
     private LinearLayout dragView;
     private SlidingUpPanelLayout slidingLayout;
-    private TextView title;
-    private TextView information;
+    private TextView instructions;
 
     private String modelName;
 
@@ -90,7 +90,6 @@ public class ModelViewerActivity extends AppCompatActivity {
         Intent intent = getIntent();
         modelName = intent.getStringExtra("modelName");
         containerView = findViewById(R.id.container_view);
-        progressBar = findViewById(R.id.model_progress_bar);
 
         dragView = (LinearLayout) findViewById(R.id.dragView);
         slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
@@ -98,19 +97,17 @@ public class ModelViewerActivity extends AppCompatActivity {
         slidingLayout.setClipPanel(false);
         slidingLayout.setDragView(dragView);
 
-        title = (TextView) findViewById(R.id.title);
-        title.setText("Statue Of Liberty");
-        information = (TextView) findViewById(R.id.info);
-        information.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
-                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown " +
-                "printer took a galley of type and scrambled it to make a type specimen book. It has survived not " +
-                "only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. " +
-                "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, " +
-                "and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+        instructions = (TextView) findViewById(R.id.instructions);
+        WebView myWebView = (WebView) findViewById(R.id.webview);
+        myWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }});
 
-        if (progressBar != null){
-            progressBar.setVisibility(View.GONE);
-        }
+        myWebView.loadUrl("https://en.m.wikipedia.org/wiki/Barack_Obama");
+
         if (getIntent().getData() != null && savedInstanceState == null) {
             beginLoadModel(getIntent().getData());
         }
@@ -207,7 +204,6 @@ public class ModelViewerActivity extends AppCompatActivity {
     }
 
     private void beginLoadModel(@NonNull Uri uri) {
-        progressBar.setVisibility(View.VISIBLE);
         new ModelLoadTask().execute(uri);
     }
 
@@ -279,7 +275,6 @@ public class ModelViewerActivity extends AppCompatActivity {
                 setCurrentModel(model);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.open_model_error, Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
             }
         }
 
@@ -306,7 +301,6 @@ public class ModelViewerActivity extends AppCompatActivity {
         createNewModelView(model);
         Toast.makeText(getApplicationContext(), R.string.open_model_success, Toast.LENGTH_SHORT).show();
         setTitle(model.getTitle());
-        progressBar.setVisibility(View.GONE);
     }
 
     private void startVrActivity() {

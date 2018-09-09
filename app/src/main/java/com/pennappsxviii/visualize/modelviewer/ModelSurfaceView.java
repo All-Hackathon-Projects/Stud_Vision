@@ -5,7 +5,11 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.MotionEvent;
+
+import android.os.Handler;
+
 
 /*
  * Copyright 2017 Dmitry Brant. All rights reserved.
@@ -43,6 +47,19 @@ public class ModelSurfaceView extends GLSurfaceView {
         renderer = new ModelRenderer(model);
         setRenderer(renderer);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        Handler handler = new Handler();
+        int delay = 1000/30;
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("rotate", "rotating");
+                renderer.rotate(0f, 1.0f);
+                requestRender();
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
     @Override
