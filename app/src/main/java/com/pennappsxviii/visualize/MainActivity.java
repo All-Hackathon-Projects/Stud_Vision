@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String ALLOW_KEY = "ALLOWED";
     public static final String CAMERA_PREF = "camera_pref";
 
-    private TextView documentText;
-    private SpannableString parsedText;
     private ArrayList<String> keywords;
     private String imageText;
     private String mCurrentPhotoPath;
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        documentText = (TextView) findViewById(R.id.documentText);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (getFromPref(this, ALLOW_KEY)) {
@@ -274,11 +271,6 @@ public class MainActivity extends AppCompatActivity {
                                 Rect elementFrame = element.getBoundingBox();
                             }
                         }
-                        documentText.setText(imageText);
-                        parsedText = convertTextToClickableSpan(imageText);
-
-                        documentText.setText(parsedText);
-                        documentText.setMovementMethod(LinkMovementMethod.getInstance());
                     }
                     Log.d("QWERTY", imageText);
                     rake();
@@ -384,33 +376,5 @@ public class MainActivity extends AppCompatActivity {
         main.addView(col2);
         view.addView(main);
         setContentView(view);
-    }
-
-    // Text Display
-    private SpannableString convertTextToClickableSpan (String input) {
-        SpannableString spanString = new SpannableString(input);
-        Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
-
-        while (matcher.find())
-        {
-            spanString.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher.start(), matcher.end(), 0); //to highlight word havgin '@'
-            final String tag = matcher.group(0);
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    String modelName = tag + ".stl";
-
-                    Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
-                    intent.putExtra("modelName", "nanotube.stl");
-                    MainActivity.this.startActivity(intent);
-                }
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                }
-            };
-            spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return spanString;
     }
 }
