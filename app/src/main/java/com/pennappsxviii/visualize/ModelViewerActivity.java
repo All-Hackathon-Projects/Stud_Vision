@@ -119,7 +119,6 @@ public class ModelViewerActivity extends AppCompatActivity {
         createNewModelView(app.getCurrentModel());
         loadModel();
         if (app.getCurrentModel() != null) {
-            Log.d("currentModel", "null");
             setTitle(app.getCurrentModel().getTitle());
         }
     }

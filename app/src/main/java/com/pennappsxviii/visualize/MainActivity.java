@@ -58,9 +58,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Currency;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView documentText;
     private SpannableString parsedText;
+    private ArrayList<String> keywords;
+    private String imageText;
     private String mCurrentPhotoPath;
 
     @Override
@@ -80,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         documentText = (TextView) findViewById(R.id.documentText);
-        flashcardDisplay();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (getFromPref(this, ALLOW_KEY)) {
@@ -225,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             textRecognition();
+            rake();
+            flashcardDisplay();
         }
     }
     @Override
@@ -246,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FirebaseVisionText result) {
                     // Task completed successfully
-                    String resultText = result.getText();
+                    imageText = result.getText();
                     for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
                         String blockText = block.getText();
                         Float blockConfidence = block.getConfidence();
@@ -267,8 +274,8 @@ public class MainActivity extends AppCompatActivity {
                                 Rect elementFrame = element.getBoundingBox();
                             }
                         }
-                        documentText.setText(resultText);
-                        parsedText = convertTextToClickableSpan(resultText);
+                        documentText.setText(imageText);
+                        parsedText = convertTextToClickableSpan(imageText);
 
                         documentText.setText(parsedText);
                         documentText.setMovementMethod(LinkMovementMethod.getInstance());
@@ -292,44 +299,25 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
-    // Text Display
-    private SpannableString convertTextToClickableSpan (String input) {
-        SpannableString spanString = new SpannableString(input);
-        Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
+    // Rapid Automatic Keyword Extraction
+    private void rake (){
+        keywords = new ArrayList<String>();
+        LinkedHashMap<String, Double> results = new Rake("en").getKeywordsFromText(imageText);
 
-        while (matcher.find())
-        {
-            spanString.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher.start(), matcher.end(), 0); //to highlight word havgin '@'
-            final String tag = matcher.group(0);
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View textView) {
-                    String modelName = tag + ".stl";
-
-                    Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
-                    intent.putExtra("modelName", "lucy.stl");
-                    MainActivity.this.startActivity(intent);
-                }
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                }
-            };
-            spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Log.d("QWERTY", results + "");
+        List<String> keys = new ArrayList<String>(results.keySet());
+        Log.d("QWERTY", keys + "");
+        for(int i = 0; i < 10; i++){
+            if(keys.size() != 0) keywords.add(keys.remove(0));
         }
-        return spanString;
     }
 
     // Text Display
     private void flashcardDisplay () {
-        ArrayList<String> arr = new ArrayList(Arrays.asList("Joel","Amos","Obadiah","Jonah","Micah","Nahum",
-                "Habakkuk","Zephaniah","Haggai","Zechariah","Malachi", "Matthew", "Mark", "Luke", "John", "Acts",
-                "Romans", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "Titus", "Philemon",
-                "Hebrews", "James", "1 Peter", "2 Peter", "Jude", "Revelation"));
         ArrayList<LinearLayout> layoutPackage = new ArrayList<LinearLayout>();
         // Layout Package
-        for(int i = 0; i < arr.size(); i++) {
-            String str = arr.get(i);
+        for(int i = 0; i < keywords.size(); i++) {
+            String str = keywords.get(i);
 
             final LinearLayout tempLayout = new LinearLayout(this);
             tempLayout.setOrientation(LinearLayout.VERTICAL);
@@ -350,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                     //Intent intent = new Intent(BibleListActivity.this, BibleTextActivity.class);
                     //intent.putExtra("EXTRA_SESSION_ID", tempImageButton.getTag().toString());
                     //startActivity(intent);
-                    Log.d("STATE", tempButton.getTag() + "");
+                    //Log.d("QWERTY", tempButton.getTag() + "");
                     Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
                     intent.putExtra("modelName", "earth.stl");
                     MainActivity.this.startActivity(intent);
@@ -384,5 +372,33 @@ public class MainActivity extends AppCompatActivity {
         main.addView(col2);
         view.addView(main);
         setContentView(view);
+    }
+
+    // Text Display
+    private SpannableString convertTextToClickableSpan (String input) {
+        SpannableString spanString = new SpannableString(input);
+        Matcher matcher = Pattern.compile("(race|gender|your)").matcher(spanString);
+
+        while (matcher.find())
+        {
+            spanString.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher.start(), matcher.end(), 0); //to highlight word havgin '@'
+            final String tag = matcher.group(0);
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    String modelName = tag + ".stl";
+
+                    Intent intent = new Intent(MainActivity.this, ModelViewerActivity.class);
+                    intent.putExtra("modelName", "lucy.stl");
+                    MainActivity.this.startActivity(intent);
+                }
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                }
+            };
+            spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return spanString;
     }
 }

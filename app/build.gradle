@@ -42,5 +42,6 @@ dependencies {
         mavenCentral()
     }
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'org.apache.commons:commons-lang3:3.6'
 }
 apply plugin: 'com.google.gms.google-services'

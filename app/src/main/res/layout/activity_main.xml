@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Not Applicable"
+        android:text=""
         android:textColor="@color/black"
-        android:textSize="18dp"/>
+        android:textSize="16dp"/>
 </RelativeLayout>

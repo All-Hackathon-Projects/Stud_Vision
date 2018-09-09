@@ -54,7 +54,6 @@ public class ModelSurfaceView extends GLSurfaceView {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d("rotate", "rotating");
                 renderer.rotate(0f, 1.0f);
                 requestRender();
                 handler.postDelayed(this, delay);
