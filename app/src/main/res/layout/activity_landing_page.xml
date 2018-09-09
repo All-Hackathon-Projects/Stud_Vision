@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LandingPageActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:src="@android:color/background_dark" />
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayout1"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/topButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/red"
+            android:onClick="top" />
+
+        <ImageButton
+            android:id="@+id/bottomButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/darkblue"
+            android:onClick="bottom" />
+    </LinearLayout>
+
+</RelativeLayout>
